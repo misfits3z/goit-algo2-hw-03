@@ -2,6 +2,8 @@ import csv
 import timeit
 from BTrees.OOBTree import OOBTree
 
+"""Час виконання 100 запитів для OOBTree: 0.281176 секунд
+   Час виконання 100 запитів для dict: 1.037853 секунд"""
 
 # Функція для завантаження даних із CSV
 def load_data(file_path):
@@ -36,7 +38,6 @@ def range_query_tree(tree, min_price, max_price):
     return [
         value for key, value in tree.items((min_price, 0), (max_price, float("inf")))
     ]
-
 
 
 def range_query_dict(dictionary, min_price, max_price):

@@ -1,94 +1,113 @@
+
 import networkx as nx
 import matplotlib.pyplot as plt
+import numpy as np
 
-# Створюємо граф
-G = nx.DiGraph()
-
-edges = [
-    (0, 1, 25),  # Термінал 1 -> Склад 1
-    (0, 2, 20),  # Термінал 1 -> Склад 2
-    (0, 3, 15),  # Термінал 1 -> Склад 3
-    (4, 3, 15),  # Термінал 2 -> Склад 3
-    (4, 5, 30),  # Термінал 2 -> Склад 4
-    (4, 2, 10),  # Термінал 2 -> Склад 2
-    (1, 6, 15),  # Склад 1 -> Магазин 1
-    (1, 7, 10),  # Склад 1 -> Магазин 2
-    (1, 8, 20),  # Склад 1 -> Магазин 3
-    (2, 9, 15),  # Склад 2 -> Магазин 4
-    (2, 10, 10),  # Склад 2 -> Магазин 5
-    (2, 11, 25),  # Склад 2 -> Магазин 6
-    (3, 12, 20),  # Склад 3 -> Магазин 7
-    (3, 13, 15),  # Склад 3 -> Магазин 8
-    (3, 14, 10),  # Склад 3 -> Магазин 9
-    (5, 15, 20),  # Склад 4 -> Магазин 10
-    (5, 16, 10),  # Склад 4 -> Магазин 11
-    (5, 17, 15),  # Склад 4 -> Магазин 12
-    (5, 18, 5),  # Склад 4 -> Магазин 13
-    (5, 19, 10),  # Склад 4 -> Магазин 14
-]
-
-# Додаємо всі ребра до графа
-G.add_weighted_edges_from(edges)
-
-# Позиції для малювання графа
-pos = {
-    6: (0, 4),  # Магазин 1
-    7: (1, 4),  # Магазин 2
-    8: (2, 4),  # Магазин 3
-    9: (4, 4),  # Магазин 4
-    10: (5, 4),  # Магазин 5
-    11: (6, 4),  # Магазин 6
-    1: (1, 3),  # Склад 1
-    2: (5, 3),  # Склад 2
-    0: (1, 2),  # Термінал 1
-    4: (5, 2),  # Термінал 2
-    3: (1, 1),  # Склад 3
-    5: (5, 1),  # Склад 4
-    12: (0, 0),  # Магазин 7
-    13: (1, 0),  # Магазин 8
-    14: (2, 0),  # Магазин 9
-    15: (3, 0),  # Магазин 10
-    16: (4, 0),  # Магазин 11
-    17: (5, 0),  # Магазин 12
-    18: (6, 0),  # Магазин 13
-    19: (7, 0),  # Магазин 14
+node_names = {
+    0: "Термінал 1",
+    1: "Склад 1",
+    2: "Склад 2",
+    3: "Склад 3",
+    4: "Термінал 2",
+    5: "Склад 4",
+    6: "Магазин 1",
+    7: "Магазин 2",
+    8: "Магазин 3",
+    9: "Магазин 4",
+    10: "Магазин 5",
+    11: "Магазин 6",
+    12: "Магазин 7",
+    13: "Магазин 8",
+    14: "Магазин 9",
+    15: "Магазин 10",
+    16: "Магазин 11",
+    17: "Магазин 12",
+    18: "Магазин 13",
+    19: "Магазин 14",
+    20: "Джерело",
+    21: "Стік",
 }
 
-# Малюємо граф
-plt.figure(figsize=(10, 6))
+# Перейменовані ребра з назвами
+edges_named = [
+    (node_names[0], node_names[1], 25),
+    (node_names[0], node_names[2], 20),
+    (node_names[0], node_names[3], 15),
+    (node_names[4], node_names[3], 15),
+    (node_names[4], node_names[5], 30),
+    (node_names[4], node_names[2], 10),
+    (node_names[1], node_names[6], 15),
+    (node_names[1], node_names[7], 10),
+    (node_names[1], node_names[8], 20),
+    (node_names[2], node_names[9], 15),
+    (node_names[2], node_names[10], 10),
+    (node_names[2], node_names[11], 25),
+    (node_names[3], node_names[12], 20),
+    (node_names[3], node_names[13], 15),
+    (node_names[3], node_names[14], 10),
+    (node_names[5], node_names[15], 20),
+    (node_names[5], node_names[16], 10),
+    (node_names[5], node_names[17], 15),
+    (node_names[5], node_names[18], 5),
+    (node_names[5], node_names[19], 10),
+    (node_names[20], node_names[0], 60),
+    (node_names[20], node_names[4], 55),
+]
+
+# Додаємо зв'язки до стоку
+for i in range(6, 20):
+    edges_named.append((node_names[i], node_names[21], 30))
+
+# Створення графа
+G_named = nx.DiGraph()
+G_named.add_weighted_edges_from(edges_named)
+
+# Нова позиція вузлів
+pos_named = {
+    node_names[6]: (0, 4),
+    node_names[7]: (1, 4),
+    node_names[8]: (2, 4),
+    node_names[9]: (4, 4),
+    node_names[10]: (5, 4),
+    node_names[11]: (6, 4),
+    node_names[1]: (1, 3),
+    node_names[2]: (5, 3),
+    node_names[0]: (1, 2),
+    node_names[4]: (5, 2),
+    node_names[3]: (1, 1),
+    node_names[5]: (5, 1),
+    node_names[12]: (0, 0),
+    node_names[13]: (1, 0),
+    node_names[14]: (2, 0),
+    node_names[15]: (3, 0),
+    node_names[16]: (4, 0),
+    node_names[17]: (5, 0),
+    node_names[18]: (6, 0),
+    node_names[19]: (7, 0),
+    node_names[20]: (3, 5),
+    node_names[21]: (3, -1),
+}
+
+# Візуалізація
+plt.figure(figsize=(14, 8))
 nx.draw(
-    G,
-    pos,
+    G_named,
+    pos_named,
     with_labels=True,
     node_size=2000,
-    node_color="skyblue",
-    font_size=12,
+    node_color="lightblue",
+    font_size=9,
     font_weight="bold",
     arrows=True,
 )
-labels = nx.get_edge_attributes(G, "weight")
-nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
 
-# Відображаємо граф
+edge_labels_named = nx.get_edge_attributes(G_named, "weight")
+nx.draw_networkx_edge_labels(G_named, pos_named, edge_labels=edge_labels_named)
+
+plt.title("Іменований граф постачання")
+plt.tight_layout()
 plt.show()
 
-# Отримуємо список усіх вузлів
-nodes = list(G.nodes)
-n = len(nodes)
-
-# Створюємо словник індексів вузлів
-node_index = {node: i for i, node in enumerate(nodes)}
-
-# Ініціалізуємо матрицю нулями
-capacity_matrix = [[0] * n for _ in range(n)]
-
-# Заповнюємо матрицю
-for u, v, data in G.edges(data=True):
-    i, j = node_index[u], node_index[v]
-    capacity_matrix[i][j] = data["weight"]
-
-# Виводимо у зрозумілому вигляді
+capacity_matrix = nx.to_numpy_array(G_named, dtype=int)
 print("Матриця пропускної здатності:")
-print("     " + "  ".join(f"{node_index[v]:>2}" for v in nodes))
-for i, row in enumerate(capacity_matrix):
-    print(f"{i:>2} | " + "  ".join(f"{val:>2}" for val in row))
+print(capacity_matrix.astype(int))
